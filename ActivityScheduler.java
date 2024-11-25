@@ -104,12 +104,14 @@ public class ActivityScheduler {
         try (PrintWriter pemdas = new PrintWriter(new FileWriter("ListKegiatan.txt"))) {
             for (int i = 0; i < count; i++) {
                 Kegiatan activity = aktivitas[i];
+                pemdas.println("======================================================================="); 
                 pemdas.println("Nama: " + activity.nama);
                 pemdas.println("Deskripsi: " + activity.deskripsi);
-                pemdas.println("Tanggal: " + activity.tanggal);
+                pemdas.println("Tanggal: " + activity.tanggal + " WIB");
                 pemdas.println("Waktu: " + activity.waktu);
                 pemdas.println("Lokasi: " + activity.tempat);
-                pemdas.println(); 
+                pemdas.println("======================================================================="); 
+                pemdas.println();
             }
             System.out.println("Data berhasil disimpan.");
         } catch (IOException e) {
