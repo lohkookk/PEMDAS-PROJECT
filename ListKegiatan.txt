@@ -1,8 +1,14 @@
-=======================================================================
-Nama: Bonding Stafmud BEM
-Deskripsi: bersama sama
-Tanggal: 26 November 2024
-Waktu: 17.00
-Lokasi: Villa Batu
-=======================================================================
-
+=====================================================
+Nama      : Penilaian Akhir Semester Ganjil 2024
+Deskripsi : Dilaksanakan Secara Luring
+Tanggal   : 02 Desember 2024
+Waktu     : 07.00 WIB - Selesai WIB
+Lokasi    : Gedung F FILKOM
+=====================================================
+=====================================================
+Nama      : Pra Penilaian Akhir Semester Ganjil 2024
+Deskripsi : Dilaksanakan Secara daring
+Tanggal   : 01 Desember 2024
+Waktu     : 07.00 - selesai
+Lokasi    : Online
+=====================================================

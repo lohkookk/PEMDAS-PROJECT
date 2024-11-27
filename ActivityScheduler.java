@@ -18,7 +18,11 @@ class Kegiatan {
 
     @Override
     public String toString() {
-        return "Kegiatan: " + nama + "\nDeskripsi: " + deskripsi + "\nTanggal: " + tanggal + "\nWaktu: " + waktu + "\nLokasi: " + tempat;
+        return "Kegiatan: " + nama +
+               "\nDeskripsi: " + deskripsi +
+               "\nTanggal: " + tanggal +
+               "\nWaktu: " + waktu +
+               "\nLokasi: " + tempat;
     }
 }
 
@@ -38,80 +42,89 @@ public class ActivityScheduler {
     }
 
     private void displayMenu() {
-        Scanner pemdas = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         String choice;
 
         do {
-            System.out.println("\n____Sistem Penjadwalan Kegiatan____");
+            System.out.println("\n ==== Sistem Penjadwalan Kegiatan ====");
             System.out.println("1. Tambah Kegiatan");
             System.out.println("2. Tampilkan Kegiatan");
             System.out.println("3. Simpan Data");
             System.out.println("4. Muat Data");
             System.out.println("5. Keluar");
             System.out.print("Pilih opsi: ");
-            choice = pemdas.nextLine();
+            choice = scanner.nextLine();
 
-            if (choice.equals("1")) {
-                nambahKegiatan(pemdas);
-            } else if (choice.equals("2")) {
-                menampilkanKegiatan();
-            } else if (choice.equals("3")) {
-                menyimpanData();
-            } else if (choice.equals("4")) {
-                memuatData();
-            } else if (!choice.equals("5")) {
-                System.out.println("Pilihan tidak valid. Silakan coba lagi.");
+            switch (choice) {
+                case "1":
+                    tambahKegiatan(scanner);
+                    break;
+                case "2":
+                    tampilkanKegiatan();
+                    break;
+                case "3":
+                    simpanData();
+                    break;
+                case "4":
+                    memuatData();
+                    break;
+                case "5":
+                    System.out.println("Keluar dari aplikasi.");
+                    break;
+                default:
+                    System.out.println("Pilihan tidak valid. Silakan coba lagi.");
             }
-
         } while (!choice.equals("5"));
 
-        System.out.println("Keluar dari aplikasi.");
-        pemdas.close();
+        scanner.close();
     }
 
-    private void nambahKegiatan(Scanner pemdas) {
+    private void tambahKegiatan(Scanner scanner) {
         if (count >= MAX_ACTIVITIES) {
             System.out.println("Kapasitas penuh! Tidak dapat menambah kegiatan lagi.");
             return;
         }
 
         System.out.print("Masukkan nama kegiatan: ");
-        String nama = pemdas.nextLine();
+        String nama = scanner.nextLine();
         System.out.print("Masukkan deskripsi: ");
-        String deskripsi = pemdas.nextLine();
+        String deskripsi = scanner.nextLine();
         System.out.print("Masukkan tanggal: ");
-        String tanggal = pemdas.nextLine();
-        System.out.print("Masukkan waktu (WIB): ");
-        String waktu = pemdas.nextLine();
+        String tanggal = scanner.nextLine();
+        System.out.print("Masukkan waktu: ");
+        String waktu = scanner.nextLine();
         System.out.print("Masukkan lokasi: ");
-        String tempat = pemdas.nextLine();
+        String tempat = scanner.nextLine();
 
         aktivitas[count] = new Kegiatan(nama, deskripsi, tanggal, waktu, tempat);
         count++;
-        System.out.println("Kegiatan ditambahkan.");
+        System.out.println("Kegiatan berhasil ditambahkan.");
     }
 
-    private void menampilkanKegiatan() {
-        System.out.println("\n--- Daftar Kegiatan ---");
+    private void tampilkanKegiatan() {
+        System.out.println("\n=== Daftar Kegiatan ===");
+        if (count == 0) {
+            System.out.println("Tidak ada kegiatan yang terdaftar.");
+            return;
+        }
+
         for (int i = 0; i < count; i++) {
             System.out.println(aktivitas[i]);
             System.out.println("__________________________________");
-            System.out.println();
         }
     }
 
-    private void menyimpanData() {
-        try (PrintWriter pemdas = new PrintWriter(new FileWriter("ListKegiatan.txt"))) {
+    private void simpanData() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("ListKegiatan.txt"))) {
             for (int i = 0; i < count; i++) {
                 Kegiatan activity = aktivitas[i];
-                pemdas.println("======================================================================="); 
-                pemdas.println("Nama: " + activity.nama);
-                pemdas.println("Deskripsi: " + activity.deskripsi);
-                pemdas.println("Tanggal: " + activity.tanggal + " WIB");
-                pemdas.println("Waktu: " + activity.waktu);
-                pemdas.println("Lokasi: " + activity.tempat);
-                pemdas.println("======================================================================="); 
-                pemdas.println();
+                writer.println("=====================================================");
+                writer.println("Nama      : " + activity.nama);
+                writer.println("Deskripsi : " + activity.deskripsi);
+                writer.println("Tanggal   : " + activity.tanggal);
+                writer.println("Waktu     : " + activity.waktu);
+                writer.println("Lokasi    : " + activity.tempat);
+                writer.println("=====================================================");
             }
             System.out.println("Data berhasil disimpan.");
         } catch (IOException e) {
@@ -126,24 +139,32 @@ public class ActivityScheduler {
             return;
         }
 
-        try (Scanner pemdas = new Scanner(file)) {
+        try (Scanner scanner = new Scanner(file)) {
             count = 0;
-            while (pemdas.hasNextLine() && count < MAX_ACTIVITIES) {
-                String nama = pemdas.nextLine().substring(6);
-                String deskripsi = pemdas.nextLine().substring(11);
-                String tanggal = pemdas.nextLine().substring(9);
-                String waktu = pemdas.nextLine().substring(7);
-                String tempat = pemdas.nextLine().substring(9);
-                aktivitas[count] = new Kegiatan(nama, deskripsi, tanggal, waktu, tempat);
-                count++;
 
-                if (pemdas.hasNextLine()) {
-                    pemdas.nextLine(); 
+            while (scanner.hasNextLine() && count < MAX_ACTIVITIES) {
+                String line = scanner.nextLine().trim();
+
+                if (line.equals("=====================================================")) {
+                    String nama = scanner.nextLine().replace("Nama      :", "").trim();
+                    String deskripsi = scanner.nextLine().replace("Deskripsi :", "").trim();
+                    String tanggal = scanner.nextLine().replace("Tanggal   :", "").trim();
+                    String waktu = scanner.nextLine().replace("Waktu     :", "").trim();
+                    String tempat = scanner.nextLine().replace("Lokasi    :", "").trim();
+
+                    
+                    if (scanner.hasNextLine()) scanner.nextLine();
+
+                    
+                    aktivitas[count] = new Kegiatan(nama, deskripsi, tanggal, waktu, tempat);
+                    count++;
                 }
             }
-            System.out.println("Data berhasil dimuat.");
+            System.out.println("Data berhasil dimuat. Total kegiatan: " + count);
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat memuat data.");
+        } catch (Exception e) {
+            System.out.println("Format file tidak valid atau ada kesalahan lainnya.");
         }
     }
 }
